@@ -38,7 +38,7 @@ export async function onRequest(context) {
         status: 200,
         headers: {
           "Content-Type": "application/json",
-          "Set-Cookie": `auth_token=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400`
+          "Set-Cookie": `auth_token=${token}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=86400`
         }
       });
     }
