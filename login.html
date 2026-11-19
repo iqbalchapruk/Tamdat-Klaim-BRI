@@ -27,9 +27,7 @@
                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Username</label>
                 <div class="relative">
                     <i class="fa-solid fa-user absolute left-3 top-3.5 text-slate-400"></i>
-                    <input type="text" id="username" 
-                           class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition" 
-                           placeholder="Masukkan username">
+                    <input type="text" id="username" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Masukkan username">
                 </div>
             </div>
 
@@ -37,14 +35,11 @@
                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Password</label>
                 <div class="relative">
                     <i class="fa-solid fa-lock absolute left-3 top-3.5 text-slate-400"></i>
-                    <input type="password" id="password" 
-                           class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition" 
-                           placeholder="Masukkan password">
+                    <input type="password" id="password" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Masukkan password">
                 </div>
             </div>
 
-            <button id="submitBtn" onclick="doLogin()" 
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-500/30 transition transform active:scale-95 flex items-center justify-center gap-2">
+            <button id="submitBtn" onclick="doLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-500/30 transition transform active:scale-95 flex items-center justify-center gap-2">
                 <span>Masuk ke Dashboard</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
@@ -54,12 +49,6 @@
     </div>
 
     <script>
-        function b64urlDecode(str) {
-            str = str.replace(/-/g, '+').replace(/_/g, '/');
-            while (str.length % 4) str += '=';
-            return JSON.parse(decodeURIComponent(escape(atob(str))));
-        }
-
         async function doLogin() {
             const btn = document.getElementById('submitBtn');
             const error = document.getElementById('errorMsg');
@@ -82,8 +71,17 @@
                 const data = await res.json();
 
                 if (res.ok && data.success) {
-                    // Small delay to ensure cookie is set before navigation
-                    setTimeout(() => { window.location.replace('/'); }, 100);
+                    // Extract token from Set-Cookie header
+                    const setCookie = res.headers.get && res.headers.get('Set-Cookie') || '';
+                    const match = setCookie.match(/auth_token=([^;]+)/);
+                    
+                    if (match) {
+                        // Set cookie manually (works in all browsers)
+                        document.cookie = 'auth_token=' + encodeURIComponent(match[1]) + '; path=/; SameSite=Lax; Secure; Max-Age=86400';
+                    }
+                    
+                    // Redirect after cookie is set
+                    setTimeout(() => { window.location.replace('/'); }, 300);
                 } else {
                     errorText.textContent = data.message || 'Login gagal';
                     error.classList.remove('hidden');
@@ -97,7 +95,7 @@
             }
         }
 
-        // Allow Enter key to submit
+        // Enter key handler
         document.getElementById('password').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') doLogin();
         });
