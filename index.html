@@ -48,11 +48,14 @@
         <button onclick="switchTab('sop')" id="nav-sop" class="px-3 py-1.5 rounded-lg bg-white/10 text-slate-300 hover:text-white font-medium transition">
           <i class="fa-solid fa-book-bookmark mr-1"></i> Matriks SLA & SOP
         </button>
-        <button onclick="openUploadModal()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-white font-medium shadow-sm transition">
+        <button onclick="openUploadModal()" id="btn-upload" class="hidden px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-white font-medium shadow-sm transition">
           <i class="fa-solid fa-file-arrow-up mr-1"></i> Update Data
         </button>
-        <button onclick="exportCSV()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium shadow-sm transition">
+        <button onclick="exportCSV()" id="btn-export" class="hidden px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium shadow-sm transition">
           <i class="fa-solid fa-download mr-1"></i> Export CSV
+        </button>
+        <button onclick="logout()" class="px-3 py-1.5 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 hover:text-white font-medium transition border border-red-500/30">
+          <i class="fa-solid fa-sign-out-alt mr-1"></i> Logout
         </button>
       </div>
     </div>
@@ -1302,6 +1305,21 @@
     }
 
     // Init
+    (function initRole() {
+      const role = window.__USER_ROLE__ || 'viewer';
+      if (role === 'admin') {
+        document.getElementById('btn-upload').classList.remove('hidden');
+        document.getElementById('btn-export').classList.remove('hidden');
+      }
+    })();
+
+    async function logout() {
+      try {
+        await fetch('/api/logout', { method: 'POST' });
+      } catch (e) {}
+      window.location.href = '/login';
+    }
+
     runFilter();
   </script>
 </body>
