@@ -1304,9 +1304,26 @@
       document.getElementById('fileDetailInfo').innerText = 'Belum ada file dipilih.';
     }
 
-    // Init
+    // base64url decode helper
+    function b64urlDecode(str) {
+      str = str.replace(/-/g, '+').replace(/_/g, '/');
+      while (str.length % 4) str += '=';
+      return JSON.parse(decodeURIComponent(escape(atob(str))));
+    }
+
+    // Init: check auth cookie and set role
     (function initRole() {
-      const role = window.__USER_ROLE__ || 'viewer';
+      const match = document.cookie.match(/auth_token=([^;]+)/);
+      let role = 'viewer';
+      if (match) {
+        try {
+          const data = b64urlDecode(match[1]);
+          if (data.e > Date.now()) role = data.r || 'viewer';
+          else { window.location.href = '/login'; }
+        } catch(e) { window.location.href = '/login'; }
+      } else {
+        window.location.href = '/login';
+      }
       if (role === 'admin') {
         document.getElementById('btn-upload').classList.remove('hidden');
         document.getElementById('btn-export').classList.remove('hidden');
@@ -1314,9 +1331,7 @@
     })();
 
     async function logout() {
-      try {
-        await fetch('/api/logout', { method: 'POST' });
-      } catch (e) {}
+      try { await fetch('/api/logout', { method: 'POST' }); } catch(e) {}
       window.location.href = '/login';
     }
 
