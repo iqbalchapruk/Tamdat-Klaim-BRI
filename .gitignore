@@ -1,0 +1,10 @@
+node_modules/
+.env
+.DS_Store
+*.log
+*.xlsx
+*.xls
+*.csv
+scratch/
+.user_uploaded/
+.system_generated/

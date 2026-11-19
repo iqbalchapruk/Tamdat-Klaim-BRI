@@ -1,0 +1,12 @@
+{
+  "name": "tamdat-klaim-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard Klaim Tamdat Askrindo - BRI Kanwil 2",
+  "main": "dashboard_klaim_tamdat.html",
+  "scripts": {
+    "start": "python -m http.server 8080"
+  },
+  "keywords": ["dashboard", "klaim", "tamdat", "askrindo", "bri"],
+  "author": "iqbalchapruk",
+  "license": "MIT"
+}
