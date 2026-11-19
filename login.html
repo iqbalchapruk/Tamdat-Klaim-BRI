@@ -82,7 +82,8 @@
                 const data = await res.json();
 
                 if (res.ok && data.success) {
-                    window.location.href = '/';
+                    // Small delay to ensure cookie is set before navigation
+                    setTimeout(() => { window.location.replace('/'); }, 100);
                 } else {
                     errorText.textContent = data.message || 'Login gagal';
                     error.classList.remove('hidden');
