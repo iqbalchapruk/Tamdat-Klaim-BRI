@@ -34,7 +34,8 @@ export async function onRequest(context) {
       };
       const token = encodeURIComponent(b64urlEncode(JSON.stringify(sessionData)));
 
-      return new Response(JSON.stringify({ success: true, role: user.role }), {
+      const token = encodeURIComponent(b64urlEncode(JSON.stringify(sessionData)));
+      return new Response(JSON.stringify({ success: true, role: user.role, token: token }), {
         status: 200,
         headers: {
           "Content-Type": "application/json",
