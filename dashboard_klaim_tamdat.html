@@ -1253,21 +1253,25 @@
     }
 
     // cari unit master yang cocok berdasarkan nama cabang (abaikan case & spasi ganda)
-    function findMasterUnit(cabangNorm) {
-      const keyNorm = cabangNorm.toUpperCase();
-      for (let i = 0; i < SUMEDANG_UNIT_MASTER.length; i++) {
-        const mk = SUMEDANG_UNIT_MASTER[i].toUpperCase();
-        if (mk.indexOf('SUMEDANG') !== -1 && keyNorm.indexOf(mk.replace(/\s+/g, ' ')) !== -1) {
-          return SUMEDANG_UNIT_MASTER[i];
-        }
-        // cek bila nama unit master ada sebagai substring cabang
-        if (keyNorm.indexOf(mk.replace(/\s+/g, ' ')) !== -1) {
-          return SUMEDANG_UNIT_MASTER[i];
-        }
-      }
-      // fallback: pakai cabang asli jika mengandung SUMEDANG
-      return null;
-    }
+          function findMasterUnit(cabangNorm) {
+            const keyNorm = cabangNorm.toUpperCase();
+            for (let i = 0; i < SUMEDANG_UNIT_MASTER.length; i++) {
+              const mk = SUMEDANG_UNIT_MASTER[i].toUpperCase();
+              // Match exact: cabangNorm == mk (exact match)
+              if (keyNorm === mk) {
+                return SUMEDANG_UNIT_MASTER[i];
+              }
+              // Match: cabangNorm contains mk (e.g. "UNIT SITURAJA SUMEDANG" contains "UNIT SITURAJA SUMEDANG")
+              if (keyNorm.indexOf(mk) !== -1) {
+                return SUMEDANG_UNIT_MASTER[i];
+              }
+              // Match: mk contains cabangNorm (e.g. master has "BRI, UNIT SITURAJA SUMEDANG" and cabangNorm has "UNIT SITURAJA SUMEDANG")
+              if (mk.indexOf(keyNorm) !== -1) {
+                return SUMEDANG_UNIT_MASTER[i];
+              }
+            }
+            return null;
+          }
 
     // ---- Terapkan update ke seluruh dashboard ----
     function applyUpdate() {
