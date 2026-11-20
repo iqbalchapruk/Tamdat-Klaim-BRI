@@ -33,8 +33,6 @@ export async function onRequest(context) {
         e: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
       };
       const token = encodeURIComponent(b64urlEncode(JSON.stringify(sessionData)));
-
-      const token = encodeURIComponent(b64urlEncode(JSON.stringify(sessionData)));
       return new Response(JSON.stringify({ success: true, role: user.role, token: token }), {
         status: 200,
         headers: {
