@@ -1227,15 +1227,19 @@
       SUMEDANG_UNIT_MASTER.forEach(function(name) { agg[name] = { deb: 0, nominal: 0 }; });
 
       debtors.forEach(function(d) {
-        // tentukan unit Sumedang: nama cabang mengandung "SUMEDANG" ATAU termasuk master list
+        // tentukan unit Sumedang: cari di master list (exact match atau substring)
         let unit = null;
         const cabangNorm = d.cabang.trim();
+        
+        // Cek exact match dulu
         if (agg.hasOwnProperty(cabangNorm)) {
           unit = cabangNorm;
-        } else if (cabangNorm.indexOf('SUMEDANG') !== -1) {
-          // cari unit master yang cocok dengan nama cabang (normalisasi spasi)
+        } else {
+          // Coba cari di master list dengan findMasterUnit
           const key = findMasterUnit(cabangNorm);
-          unit = key;
+          if (key) {
+            unit = key;
+          }
         }
         if (!unit) return;
         agg[unit].deb += 1;
