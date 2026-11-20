@@ -903,12 +903,8 @@
       }
 
       // Kelompokkan per induk BRI
-      // EXCLUDE unit yang sudah termasuk Portofolio Sumedang
-      const SUMEDANG_INDUK = 'CABANG SUMEDANG';
       Object.values(unitList).forEach(function(u) {
         const induk = findInduk(u.name) || u.name;
-        // Skip cabang Sumedang - sudah ada di Portofolio Sumedang
-        if (induk === SUMEDANG_INDUK) return;
         if (!indukList[induk]) indukList[induk] = { name: induk, deb: 0, nominal: 0 };
         indukList[induk].deb += u.deb;
         indukList[induk].nominal += u.nominal;
