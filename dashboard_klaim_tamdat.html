@@ -881,6 +881,21 @@
     function buildBandung() {
       const indukList = {};
       const unitList = {};
+      
+      // Inisialisasi SEMUA unit dari mapping (193 unit) - bahkan yang belum ada data
+      if (bandungMaping && Object.keys(bandungMaping).length > 0) {
+        const allKeys = new Set();
+        // Kumpulkan semua key (atau induk) dari mapping
+        Object.entries(bandungMaping).forEach(([alias, induk]) => {
+          allKeys.add(alias);
+          allKeys.add(induk);
+        });
+        allKeys.forEach(key => {
+          if (key !== 'CABANG SUMEDANG') { // EXCLUDE Sumedang - ada di tab khusus Sumedang
+            if (!unitList[key]) unitList[key] = { name: key, deb: 0, nominal: 0 };
+          }
+        });
+      }
 
       (fullSummary.summaryData || []).forEach(function(s) {
         if (s.kantor !== 'Kantor Askrindo Bandung') return;
@@ -905,6 +920,8 @@
       // Kelompokkan per induk BRI
       Object.values(unitList).forEach(function(u) {
         const induk = findInduk(u.name) || u.name;
+        // EXCLUDE CABANG SUMEDANG - ada di tab Sumedang khusus
+        if (induk === 'CABANG SUMEDANG') return;
         if (!indukList[induk]) indukList[induk] = { name: induk, deb: 0, nominal: 0 };
         indukList[induk].deb += u.deb;
         indukList[induk].nominal += u.nominal;
