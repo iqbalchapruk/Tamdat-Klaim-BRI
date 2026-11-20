@@ -1311,29 +1311,30 @@
       return JSON.parse(decodeURIComponent(escape(atob(str))));
     }
 
-    // Init: check auth cookie and set role
-    (function initRole() {
-      const match = document.cookie.match(/auth_token=([^;]+)/);
-      let role = 'viewer';
-      if (match) {
-        try {
-          const data = b64urlDecode(match[1]);
-          if (data.e > Date.now()) role = data.r || 'viewer';
-          else { window.location.href = '/login'; }
-        } catch(e) { window.location.href = '/login'; }
-      } else {
-        window.location.href = '/login';
-      }
-      if (role === 'admin') {
-        document.getElementById('btn-upload').classList.remove('hidden');
-        document.getElementById('btn-export').classList.remove('hidden');
+    // Init: check auth token from localStorage and set role
+        (function initRole() {
+          const token = localStorage.getItem('auth_token');
+          let role = 'viewer';
+          if (token) {
+            try {
+              const data = b64urlDecode(token);
+              if (data.e > Date.now()) role = data.r || 'viewer';
+              else { window.location.href = '/login'; }
+            } catch(e) { window.location.href = '/login'; }
+          } else {
+            window.location.href = '/login';
+          }
+          if (role === 'admin') {
+            document.getElementById('btn-upload').classList.remove('hidden');
+            document.getElementById('btn-export').classList.remove('hidden');
       }
     })();
 
     async function logout() {
-      try { await fetch('/api/logout', { method: 'POST' }); } catch(e) {}
-      window.location.href = '/login';
-    }
+          try { await fetch('/api/logout', { method: 'POST' }); } catch(e) {}
+          localStorage.removeItem('auth_token');
+          window.location.href = '/login';
+        }
 
     runFilter();
   </script>

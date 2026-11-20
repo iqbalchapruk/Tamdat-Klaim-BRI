@@ -32,7 +32,7 @@ export async function onRequest(context) {
   }
 
   // Check authentication for all other routes
-  // Support both cookie and Authorization header
+  // Support both Authorization header and cookie
   const authHeader = context.request.headers.get('authorization');
   const cookie = context.request.headers.get('cookie');
   let sessionData = null;
@@ -45,22 +45,20 @@ export async function onRequest(context) {
     } catch (e) {}
   }
 
+  // Fallback to cookie
   if (!sessionData) {
     const tokenMatch = cookie && cookie.match(/auth_token=([^;]+?)(?:;|$)/);
-  const tokenMatch = cookie && cookie.match(/auth_token=([^;]+?)(?:;|$)/);
-
-  if (!tokenMatch) return redirectToLogin();
-
-  if (!sessionData) {
-    try {
-      sessionData = b64urlDecode(decodeURIComponent(tokenMatch[1]));
-    } catch (err) {
-      return redirectToLogin();
+    if (tokenMatch) {
+      try {
+        sessionData = b64urlDecode(decodeURIComponent(tokenMatch[1]));
+      } catch (err) {}
     }
   }
 
+  if (!sessionData) return redirectToLogin();
+
   // Check if session is expired
-  if (!sessionData || sessionData.expiry < Date.now()) {
+  if (sessionData.expiry < Date.now()) {
     return redirectToLogin();
   }
 

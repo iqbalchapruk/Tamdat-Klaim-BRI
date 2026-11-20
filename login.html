@@ -71,17 +71,13 @@
                 const data = await res.json();
 
                 if (res.ok && data.success) {
-                    // Extract token from Set-Cookie header
-                    const setCookie = res.headers.get && res.headers.get('Set-Cookie') || '';
-                    const match = setCookie.match(/auth_token=([^;]+)/);
-                    
-                    if (match) {
-                        // Set cookie manually (works in all browsers)
-                        document.cookie = 'auth_token=' + encodeURIComponent(match[1]) + '; path=/; SameSite=Lax; Secure; Max-Age=86400';
+                    // Store token in localStorage (bulletproof across all browsers)
+                    if (data.token) {
+                        localStorage.setItem('auth_token', data.token);
                     }
                     
-                    // Redirect after cookie is set
-                    setTimeout(() => { window.location.replace('/'); }, 300);
+                    // Redirect
+                    window.location.replace('/');
                 } else {
                     errorText.textContent = data.message || 'Login gagal';
                     error.classList.remove('hidden');
