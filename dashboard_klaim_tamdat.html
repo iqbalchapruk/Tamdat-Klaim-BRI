@@ -1280,18 +1280,21 @@
       fullDebtors.length = 0;
       Array.prototype.push.apply(fullDebtors, pendingDetailData);
 
-      // Perbarui fullSummary
+      // PERbarui fullSummary
       fullSummary.totalKanwilKlaim = pendingSummaryData.totalKanwilKlaim;
       fullSummary.totalKanwilDebitur = pendingSummaryData.totalKanwilDebitur;
       fullSummary.totalUnits = pendingSummaryData.totalUnits;
       fullSummary.kantorTotals = pendingSummaryData.kantorTotals;
       fullSummary.summaryData = pendingSummaryData.summaryData;
+      
+      // PERBAIKAN: Gunakan BANDUNG_UNIT_INDUK yang diembed (193 unit)
+      bandungMaping = BANDUNG_UNIT_INDUK;
 
       // Rekonstruksi portofolio Sumedang
       fullSumedang.length = 0;
       Array.prototype.push.apply(fullSumedang, buildSumedang(pendingDetailData));
 
-      // Simpan maping BRI Bandung (untuk portofolio induk BRI)
+      // PERBAIKAN: Gunakan BANDUNG_UNIT_INDUK yang diembed (193 unit)
       bandungMaping = BANDUNG_UNIT_INDUK;
 
       // Segarkan tampilan
