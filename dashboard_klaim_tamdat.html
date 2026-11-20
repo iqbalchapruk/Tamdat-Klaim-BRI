@@ -1288,7 +1288,14 @@
       fullDebtors.length = 0;
       Array.prototype.push.apply(fullDebtors, pendingDetailData);
 
-      // PERBAIKAN: Gunakan BANDUNG_UNIT_INDUK yang diembed (193 unit)
+      // Perbarui fullSummary
+      fullSummary.totalKanwilKlaim = pendingSummaryData.totalKanwilKlaim;
+      fullSummary.totalKanwilDebitur = pendingSummaryData.totalKanwilDebitur;
+      fullSummary.totalUnits = pendingSummaryData.totalUnits;
+      fullSummary.kantorTotals = pendingSummaryData.kantorTotals;
+      fullSummary.summaryData = pendingSummaryData.summaryData;
+
+      // Gunakan BANDUNG_UNIT_INDUK yang diembed (193 unit)
       bandungMaping = BANDUNG_UNIT_INDUK;
 
       // Rekonstruksi portofolio Sumedang
